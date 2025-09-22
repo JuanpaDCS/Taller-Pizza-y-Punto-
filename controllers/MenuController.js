@@ -2,11 +2,11 @@
 const inquirer = require('inquirer');
 const { closeDB } = require('../utils/db');
 const { initializeDB } = require('../utils/helpers');
-const { registrarPedido } = require('./PedidoController');
 const reporteService = require('../services/ReporteService');
 const { registrarCliente } = require('./ClienteController');
 const { gestionClientes, eliminarCliente } = require('./GestionClientesController');
-
+const { registrarPedido } = require('./PedidoController');
+const { mostrarPedidosCompletados } = require('./PedidosController'); 
 async function showMainMenu() {
   const choices = [
     { name: '1. Registrar un nuevo pedido', value: 'registrar_pedido' },
@@ -14,7 +14,8 @@ async function showMainMenu() {
     { name: '3. Registrar nuevo cliente', value: 'registrar_cliente' },
     { name: '4. Gestión de Clientes', value: 'gestion_clientes' },
     { name: '5. Eliminar un cliente', value: 'eliminar_cliente' },
-    { name: '6. Salir', value: 'exit' }
+    { name: '6. Ver Pedidos Completados', value: 'ver_pedidos_completados' },
+    { name: '7. Salir', value: 'exit' }
   ];
 
   const answer = await inquirer.prompt({
@@ -39,6 +40,9 @@ async function showMainMenu() {
       break;
     case 'eliminar_cliente':
       await eliminarCliente();
+      break;
+    case 'ver_pedidos_completados':
+      await mostrarPedidosCompletados();
       break;
     case 'exit':
       await closeDB();

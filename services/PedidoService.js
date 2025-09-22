@@ -1,5 +1,6 @@
 const { connectToDB, client } = require('../utils/db');
 const inventarioService = require('./InventarioService');
+const { elegirRepartidorAleatorio } = require('../models/Repartidor');
 
 async function realizarPedido(clienteId, pizzaIds) {
   const session = client.startSession();
@@ -10,7 +11,7 @@ async function realizarPedido(clienteId, pizzaIds) {
       const db = await connectToDB();
       const pedidosCol = db.collection('pedidos');
       const pizzasCol = db.collection('pizzas');
-      const repartidoresCol = db.collection('repartidores');
+      const pedidosCompletadosCol = db.collection('pedidos_completados');
 
       const pizzasSeleccionadas = await pizzasCol.find({ _id: { $in: pizzaIds } }).toArray();
 
@@ -24,7 +25,7 @@ async function realizarPedido(clienteId, pizzaIds) {
         });
         return acc;
       }, {});
-      
+
       const ingredientesArray = Object.keys(ingredientesTotales).map(nombre => ({
         nombre,
         cantidad: ingredientesTotales[nombre]
@@ -37,28 +38,30 @@ async function realizarPedido(clienteId, pizzaIds) {
 
       await inventarioService.descontarStock(ingredientesArray, session);
 
-      const repartidor = await repartidoresCol.findOneAndUpdate(
-        { estado: 'disponible' },
-        { $set: { estado: 'ocupado' } },
-        { returnDocument: 'after', session }
-      );
+      // --- New Logic: Automate Repartidor Assignment and Order Completion ---
+      const repartidorElegido = elegirRepartidorAleatorio();
 
-      if (!repartidor.value) {
-        throw new Error('No hay repartidores disponibles en este momento.');
-      }
-      
-      const repartidorId = repartidor.value._id;
+      const repartidorId = repartidorElegido.id;
 
       const nuevoPedido = {
         clienteId,
         pizzas: pizzasSeleccionadas.map(p => ({ _id: p._id, nombre: p.nombre, precio: p.precio })),
         repartidorId,
-        estado: 'en preparación',
+        estado: 'completado', // The order is now completed right away
         fecha: new Date()
       };
-      await pedidosCol.insertOne(nuevoPedido, { session });
+      
+      await pedidosCompletadosCol.insertOne(nuevoPedido, { session });
 
-      result = { success: true, message: 'Pedido registrado exitosamente.' };
+      result = { success: true, message: 'Pedido registrado y completado exitosamente.' };
+
+      const tiempoDemora = Math.floor(Math.random() * (45 - 20 + 1)) + 20;
+      const tiempoCompletado = new Date();
+      tiempoCompletado.setMinutes(tiempoCompletado.getMinutes() + tiempoDemora);
+
+      result.demora = tiempoDemora;
+      result.completado = tiempoCompletado.toLocaleTimeString('es-ES');
+      result.repartidorNombre = repartidorElegido.nombre;
     });
   } catch (error) {
     console.error(`Transacción fallida: ${error.message}`);

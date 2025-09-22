@@ -2,7 +2,7 @@ const { connectToDB } = require('../utils/db');
 
 async function ingredientesMasUsados(dias = 30) {
   const db = await connectToDB();
-  const pedidosCol = db.collection('pedidos');
+  const pedidosCol = db.collection('pedidos_completados');
 
   const fechaLimite = new Date();
   fechaLimite.setDate(fechaLimite.getDate() - dias);
@@ -70,7 +70,7 @@ async function promedioPreciosPorCategoria() {
 
 async function categoriasMasVendidas() {
   const db = await connectToDB();
-  const pedidosCol = db.collection('pedidos');
+  const pedidosCol = db.collection('pedidos_completados');
 
   const pipeline = [
     { $unwind: '$pizzas' },

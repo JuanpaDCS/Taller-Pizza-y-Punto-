@@ -1,7 +1,9 @@
+// controllers/PedidoController.js
 const inquirer = require('inquirer');
 const { ObjectId } = require('mongodb');
 const { connectToDB } = require('../utils/db');
 const pedidoService = require('../services/PedidoService');
+const { elegirRepartidorAleatorio } = require('../models/Repartidor')
 
 async function registrarPedido() {
   const db = await connectToDB();
@@ -45,10 +47,10 @@ async function registrarPedido() {
       ...pizzaChoices
     ],
     validate: (input) => {
-      if (input.includes('back')) {
-        return true;
+      if (input.length === 0 && !input.includes('back')) {
+        return 'Debe seleccionar al menos una pizza.';
       }
-      return input.length > 0 || 'Debe seleccionar al menos una pizza.';
+      return true;
     }
   });
 
@@ -64,6 +66,9 @@ async function registrarPedido() {
 
   if (result.success) {
     console.log(`✅ ${result.message}`);
+    console.log(`🛵 Repartidor asignado: ${result.repartidorNombre}`);
+    console.log(`📦 Tiempo de demora estimado: ${result.demora} minutos.`);
+    console.log(`⏰ Su pedido debería estar completado alrededor de las ${result.completado}.`);
   } else {
     console.log(`❌ ${result.message}`);
   }

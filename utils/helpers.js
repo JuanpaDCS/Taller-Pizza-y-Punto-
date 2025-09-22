@@ -1,3 +1,4 @@
+// utils/helpers.js
 const { connectToDB } = require('./db');
 
 async function initializeDB() {
@@ -8,7 +9,7 @@ async function initializeDB() {
   const pizzas = db.collection('pizzas');
 
   await clientes.deleteMany({});
-  await repartidores.deleteMany({});
+  await repartidores.deleteMany({}); // Delete repartidores collection
   await ingredientes.deleteMany({});
   await pizzas.deleteMany({});
 
@@ -17,10 +18,8 @@ async function initializeDB() {
     { nombre: 'Juan Gómez', telefono: '555-5678', direccion: 'Avenida Siempre Viva 456' }
   ]);
 
-  await repartidores.insertMany([
-    { nombre: 'Pedro Ramírez', estado: 'disponible' },
-    { nombre: 'Sofía Castro', estado: 'disponible' }
-  ]);
+  // We are removing the repartidores collection, so we don't need to insert them
+  // as the logic will now choose a repartidor from a predefined list.
 
   await ingredientes.insertMany([
     { nombre: 'Tomate', tipo: 'vegetal', stock: 100 },
