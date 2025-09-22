@@ -5,6 +5,24 @@
 
 El proyecto sigue una estructura modular para mantener el código organizado y fácil de mantener, con carpetas dedicadas a modelos, servicios, controladores y utilidades.
 
+pizza-y-punto/
+├── models/             # Esquemas de datos 
+│   └── Repartidor.js
+├── services/           # Lógica de negocio
+│   ├── InventarioService.js
+│   ├── PedidoService.js
+│   └── ReporteService.js
+├── controllers/        # Lógica de la interfaz de usuario y orquestación
+│   ├── ClienteController.js
+│   ├── MenuController.js
+│   └── PedidoController.js
+├── utils/              # Funciones de utilidad (conexión a DB, inicialización)
+│   ├── db.js
+│   └── helpers.js
+├── .gitignore
+├── package.json
+└── index.js            # Punto de entrada de la aplicación
+
 ## Instalación y Ejecución
 
 Para poner en marcha la aplicación, sigue estos sencillos pasos:
@@ -53,3 +71,13 @@ Para los reportes de análisis, se utiliza el **Aggregation Framework de MongoDB
 * **Categoría de pizzas con más ventas**: Muestra qué categorías de pizzas (basadas en sus ingredientes) son las más populares históricamente.
 
 Estos reportes son fundamentales para la toma de decisiones, como la gestión del inventario y la planificación del menú.
+
+---
+
+## 🤝 Realizado por:🤝
+
+* Juan Pablo Cifuentes 
+* Juan Sebastian Gualdron
+* Cristian Perez
+
+---
