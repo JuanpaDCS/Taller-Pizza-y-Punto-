@@ -1,0 +1,16 @@
+{
+  "name": "pizza-y-punto",
+  "version": "1.0.0",
+  "description": "Una aplicación de consola para gestionar pedidos de pizzas.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mongodb": "^4.17.2"
+  }
+}
