@@ -5,6 +5,9 @@
 
 El proyecto sigue una estructura modular para mantener el código organizado y fácil de mantener, con carpetas dedicadas a modelos, servicios, controladores y utilidades.
 
+
+```bash
+
 pizza-y-punto/
 ├── models/             # Esquemas de datos 
 │   └── Repartidor.js
@@ -22,6 +25,7 @@ pizza-y-punto/
 ├── .gitignore
 ├── package.json
 └── index.js            # Punto de entrada de la aplicación
+```
 
 ## Instalación y Ejecución
 
